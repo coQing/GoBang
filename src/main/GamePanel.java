@@ -18,6 +18,10 @@ public class GamePanel extends JPanel implements ActionListener {
 	JMenuBar jmb=null;
 	public String gameFlag="";
 
+	public static final int ROWS=15;
+	public static final int COLS=15;
+
+
 	//构造里面初始化相关参数
 	public GamePanel(JFrame frame){
 		this.setLayout(null);
@@ -34,7 +38,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	private void  initMenu(){
 		// 创建菜单及菜单选项
 		jmb = new JMenuBar();
-		JMenu jm1 = new JMenu("游戏");
+		JMenu jm1 = new JMenu("主菜单");
 		jm1.setFont(new Font("思源宋体", Font.BOLD, 18));// 设置菜单显示的字体
 		JMenu jm2 = new JMenu("帮助");
 		jm2.setFont(new Font("思源宋体", Font.BOLD, 18));// 设置菜单显示的字体
@@ -108,4 +112,56 @@ public class GamePanel extends JPanel implements ActionListener {
 		}
 
 	}
+
+	@Override
+	public void paint(java.awt.Graphics g) {
+		super.paint(g);
+
+		//绘制网格
+		drawGrid(g);
+
+		//绘制5个黑点
+		draw5Point(g);
+	}
+
+	//绘制网格
+	private void drawGrid(Graphics g) {
+		Graphics2D g_2d=(Graphics2D)g;
+		int start=26;
+		int x1=start;
+		int y1;
+		int x2=586;
+		int y2;
+		for (int i = 0; i < ROWS; i++) {
+			y1 = start + 40*i;
+			y2 = y1;
+			g_2d.drawLine(x1, y1, x2, y2);
+		}
+
+		y1=start;
+		y2=586;
+		for (int i = 0; i < COLS; i++) {
+			x1 = start + 40*i;
+			x2 = x1;
+			g_2d.drawLine(x1, y1, x2, y2);
+		}
+	}
+
+	//绘制5个黑点
+	private void draw5Point(Graphics g) {
+		//第1个点
+		g.fillArc(142, 142, 8, 8, 0, 500);
+		//第2个点
+		g.fillArc(462, 142, 8, 8, 0, 360);
+
+		//第3个点
+		g.fillArc(142, 462, 8, 8, 0, 360);
+		//第4个点
+		g.fillArc(462, 462, 8, 8, 0, 360);
+
+		//中心点
+		g.fillArc(302, 302, 8, 8, 0, 360);
+	}
+
+
 }
