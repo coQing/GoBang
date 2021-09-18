@@ -12,6 +12,7 @@ public class Qizi {
 	private GamePanel panel = null;
 	private Color color = null;
 	private int type = 1;// 棋子类型 1：白棋 2：黑棋
+	private boolean last=false;//标示最后下的那个棋子
 
 	public Qizi(int x, int y, int type, GamePanel panel) {
 		this.x = x;
@@ -32,6 +33,14 @@ public class Qizi {
 		if (color != null) {// 用完设置回去颜色
 			g.setColor(oColor);
 		}
+	}
+
+	public boolean isLast() {
+		return last;
+	}
+
+	public void setLast(boolean last) {
+		this.last = last;
 	}
 	
 	public int getType() {

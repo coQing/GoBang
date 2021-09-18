@@ -275,6 +275,13 @@ public class GamePanel extends JPanel implements ActionListener {
 							//重绘画布
 							repaint();
 
+							//判断有没有五子连珠的情况
+							if(AI.has5(pointer, gamePanel)){
+								gamePanel.gameWin();
+							}else{
+								AI.next(gamePanel);
+							}
+
 							return ;
 						}
 					}
@@ -289,4 +296,21 @@ public class GamePanel extends JPanel implements ActionListener {
 		addMouseListener(mouseAdapter);
 	}
 
+	//游戏胜利
+	public void gameWin() {
+		gameFlag = "end";
+		//弹出结束提示
+		UIManager.put("OptionPane.buttonFont", new FontUIResource(new Font("宋体", Font.ITALIC, 18)));
+		UIManager.put("OptionPane.messageFont", new FontUIResource(new Font("宋体", Font.ITALIC, 18)));
+		JOptionPane.showMessageDialog(mainFrame, "你胜利了,太棒了!");
+	}
+
+	//游戏结束
+	public void gameOver() {
+		gameFlag = "end";
+		//弹出结束提示
+		UIManager.put("OptionPane.buttonFont", new FontUIResource(new Font("宋体", Font.ITALIC, 18)));
+		UIManager.put("OptionPane.messageFont", new FontUIResource(new Font("宋体", Font.ITALIC, 18)));
+		JOptionPane.showMessageDialog(mainFrame, "你失败了,请再接再厉!");
+	}
 }
