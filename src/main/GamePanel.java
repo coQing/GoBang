@@ -1,11 +1,17 @@
 package main;
 
 
+import common.ImageValue;
+
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /*
@@ -21,6 +27,10 @@ public class GamePanel extends JPanel implements ActionListener {
 	public static final int ROWS=15;
 	public static final int COLS=15;
 
+	public Pointer points[][] =  new Pointer[ROWS][COLS];
+
+
+	List qizis = new ArrayList();
 
 	//构造里面初始化相关参数
 	public GamePanel(JFrame frame){
@@ -30,6 +40,13 @@ public class GamePanel extends JPanel implements ActionListener {
 
 		//创建按钮建
 		initMenu();
+
+		ImageValue.init();
+
+		init();
+
+		//添加鼠标监听
+		createMouseListener();
 
 		mainFrame.requestFocus();
 		mainFrame.setVisible(true);
@@ -122,6 +139,29 @@ public class GamePanel extends JPanel implements ActionListener {
 
 		//绘制5个黑点
 		draw5Point(g);
+
+		//绘制棋子
+		Qizi qizi=null;
+		for (int i = 0; i < qizis.size(); i++) {
+			qizi = (Qizi)qizis.get(i);
+			qizi.draw(g);
+		}
+
+		//绘制指示器
+		Pointer pointer = null;
+		for (int i = 0; i < ROWS; i++) {
+			for (int j = 0; j < COLS; j++) {
+				pointer = points[i][j] ;
+				if(pointer!=null){
+					pointer.draw(g);
+				}
+			}
+		}
+
+
+
+
+
 	}
 
 	//绘制网格
@@ -163,5 +203,90 @@ public class GamePanel extends JPanel implements ActionListener {
 		g.fillArc(302, 302, 8, 8, 0, 360);
 	}
 
+	//初始化相关对象
+	private void init() {
+		createArr();
+		//游戏开始标记
+		gameFlag="start";
+	}
+
+
+	//创建二维数组
+	private void createArr() {
+		int x=0,y=0;
+		for (int i = 0; i < ROWS; i++) {
+			for (int j = 0; j < COLS; j++) {
+				y = 26 + 40*i;
+				x = 26 + 40*j;
+				Pointer pointer = new Pointer(x, y, i,j,new Color(255,0,0), this);
+				points[i][j] = pointer;
+			}
+		}
+	}
+
+
+	//鼠标事件的创建
+	private void createMouseListener() {
+		MouseAdapter mouseAdapter = new MouseAdapter() {
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				//鼠标移入对应的格子后显示指针
+				if(!"start".equals(gameFlag)) return ;
+
+				int x = e.getX();
+				int y = e.getY();
+				Pointer pointer;
+				for (int i = 0; i <ROWS; i++) {
+					for (int j = 0; j < COLS; j++) {
+						pointer = points[i][j];
+						if(pointer==null)continue;
+						//被选中，且没有棋子，则显示指示器
+						if(pointer.isPoint(x, y) && pointer.getQizi()==0){
+							pointer.setShow(true);
+						}else{
+							pointer.setShow(false);
+						}
+					}
+				}
+				//重绘画布
+				repaint();
+			}
+
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//在合适的位置点击则进行落子操作
+				if(!"start".equals(gameFlag)) return ;
+
+				int x = e.getX();
+				int y = e.getY();
+
+				Pointer pointer;
+				for (int i = 0; i <ROWS; i++) {
+					for (int j = 0; j < COLS; j++) {
+						pointer = points[i][j];
+						if(pointer==null)continue;
+						//被点击，且没有棋子，则可以落子
+						if(pointer.isPoint(x, y) && pointer.getQizi()==0){
+							Qizi qizi = new Qizi(pointer.getX(), pointer.getY(), 2, gamePanel);
+							pointer.setQizi(2);
+							qizis.add(qizi);
+							//重绘画布
+							repaint();
+
+							return ;
+						}
+					}
+				}
+			}
+
+
+
+
+		};
+		addMouseMotionListener(mouseAdapter);
+		addMouseListener(mouseAdapter);
+	}
 
 }
