@@ -612,10 +612,14 @@ class DataCount implements Comparator<Data>{
 	@Override
 	public int compare(Data o1, Data o2) {
 
-		if(o1.getCount()>o2.getCount()){
-			return -1;
-		}
-		return 1;
+//		if(o1.getCount()>o2.getCount()){
+//			return -1;
+//		}
+//		return 1;
+
+		// 符合规范 不会抛出异常：Comparison method violates its general contract!
+		return (o1.getCount()<o2.getCount()) ? 1 : ((o1.getCount()==o2.getCount()) ? 0 : -1);
+
 
 	}
 
