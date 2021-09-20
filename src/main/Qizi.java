@@ -1,7 +1,7 @@
 package main;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
+
 import common.ImageValue;
 
 public class Qizi {
@@ -33,6 +33,16 @@ public class Qizi {
 		if (color != null) {// 用完设置回去颜色
 			g.setColor(oColor);
 		}
+
+
+		if(last){
+			Graphics2D g2 = (Graphics2D)g;  //g是Graphics对象
+			g2.setStroke(new BasicStroke(1.6f));
+			g2.setColor(new Color(255,0,0));
+			g2.drawRect(x-3, y-3, 6, 6);
+			g2.setColor(oColor);
+		}
+
 	}
 
 	public boolean isLast() {

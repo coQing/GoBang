@@ -94,6 +94,20 @@ public class GamePanel extends JPanel implements ActionListener {
 	public void restart() {
 		//游戏开始标记
 		gameFlag="start";
+
+		//指示器全部还原
+		Pointer pointer;
+		for (int i = 0; i < ROWS; i++) {
+			for (int j = 0; j < COLS; j++) {
+				pointer = points[i][j] ;
+				if(pointer!=null){
+					pointer.setQizi(0);
+					pointer.setShow(false);
+				}
+			}
+		}
+
+		qizis.clear();
 	}
 
 
@@ -140,6 +154,8 @@ public class GamePanel extends JPanel implements ActionListener {
 		//绘制5个黑点
 		draw5Point(g);
 
+
+
 		//绘制棋子
 		Qizi qizi=null;
 		for (int i = 0; i < qizis.size(); i++) {
@@ -163,6 +179,18 @@ public class GamePanel extends JPanel implements ActionListener {
 
 
 	}
+
+	//清除电脑棋子的最后一个棋子的指示器
+	private void clearAILast() {
+		Qizi qizi;
+		for (int i = 0; i < qizis.size(); i++) {
+			qizi = (Qizi)qizis.get(i);
+			if(qizi!=null && qizi.getType()==1){
+				qizi.setLast(false);
+			}
+		}
+	}
+
 
 	//绘制网格
 	private void drawGrid(Graphics g) {
@@ -272,6 +300,10 @@ public class GamePanel extends JPanel implements ActionListener {
 							Qizi qizi = new Qizi(pointer.getX(), pointer.getY(), 2, gamePanel);
 							pointer.setQizi(2);
 							qizis.add(qizi);
+
+							//下完子后将电脑的最后一个棋子指示方块清除
+							clearAILast();
+
 							//重绘画布
 							repaint();
 
